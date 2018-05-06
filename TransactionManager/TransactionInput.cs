@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,6 +12,12 @@ namespace TransactionManager
         public TransactionInput(string TOH)
         {
             TransactionOutputHash = TOH;
+        }
+        [JsonConstructor]
+        public TransactionInput(string TransactionOutputHash, TransactionOutput UTXO)
+        {
+            this.TransactionOutputHash = TransactionOutputHash;
+            this.UTXO = UTXO;
         }
     }
 }

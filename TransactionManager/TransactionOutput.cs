@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,12 +11,13 @@ namespace TransactionManager
         public string Reciepient { get; private set; }
         public double Amount { get; private set; }
         public string ParentTransactionHash { get; private set; }
-        public TransactionOutput(string reciepient, double amount, string parentTransactionhash)
+        [JsonConstructor]
+        public TransactionOutput(string Reciepient, double Amount, string ParentTransactionHash)
         {
-            Reciepient = reciepient;
-            Amount = amount;
-            ParentTransactionHash = parentTransactionhash;
-            HashString = (Reciepient + Amount.ToString() + parentTransactionhash).GetHashString();
+            this.Reciepient = Reciepient;
+            this.Amount = Amount;
+            this.ParentTransactionHash = ParentTransactionHash;
+            HashString = (Reciepient + Amount.ToString() + ParentTransactionHash).GetHashString();
         }
         public bool IsMine(string Key)
         {
