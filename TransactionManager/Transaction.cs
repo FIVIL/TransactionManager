@@ -70,7 +70,7 @@ namespace TransactionManager
         }
         public string GetHashString()
         {
-            return (Issuer + Reciepient + Amount + TransactionVersion.ToString() + Sequence.ToString()).GetHashString();
+            return (ID.ToString() + Issuer + Reciepient + Amount + TransactionVersion.ToString() + Sequence.ToString()).GetHashString();
         }
         #endregion
         #region signture
@@ -81,7 +81,7 @@ namespace TransactionManager
         public void GenerateSignture(string PrivateKey)
         {
             RSASignatureProvider rsa = new RSASignatureProvider(PrivateKey);
-            var data = (Issuer + Reciepient + Amount + TransactionVersion.ToString() + Sequence.ToString());
+            var data = (ID.ToString() + Issuer + Reciepient + Amount + TransactionVersion.ToString() + Sequence.ToString());
             _signture = rsa.CreateSigntureUnicode(data);
         }
         public bool IsSignatureVerified
@@ -89,7 +89,7 @@ namespace TransactionManager
             get
             {
                 RSASignatureProvider rsa = new RSASignatureProvider(Convert.FromBase64String(Issuer));
-                var data = (Issuer + Reciepient + Amount + TransactionVersion.ToString() + Sequence.ToString());
+                var data = (ID.ToString() + Issuer + Reciepient + Amount + TransactionVersion.ToString() + Sequence.ToString());
                 return rsa.VerifySignatureUnicode(data, _signture);
             }
         }
