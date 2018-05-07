@@ -24,7 +24,7 @@ namespace TransactionManager
         public uint BlockNumber { get; set; }
         public bool IsBlockReward { get; set; }
         public List<TransactionInput> TransactionInputs { get; private set; }
-        public List<TransactionOutput> TtransactionOutputs { get; private set; }
+        public List<TransactionOutput> TransactionOutputs { get; private set; }
         public double InputsBalance
         {
             get
@@ -42,7 +42,7 @@ namespace TransactionManager
             get
             {
                 double retValue = 0;
-                foreach (var item in TtransactionOutputs)
+                foreach (var item in TransactionOutputs)
                 {
                     retValue += item.Amount;
                 }
@@ -73,7 +73,7 @@ namespace TransactionManager
         {
             this.ID = ID;
             this.Signture = Signture;
-            this.TtransactionOutputs = TtransactionOutputs;
+            this.TransactionOutputs = TtransactionOutputs;
             this.IssuanceTime = IssuanceTime;
             this.IsBlockReward = IsBlockReward;
         }
@@ -97,7 +97,7 @@ namespace TransactionManager
             Amount = amount;
             Sequence = seq;
             TransactionInputs = transactionInputs;
-            TtransactionOutputs = new List<TransactionOutput>();
+            TransactionOutputs = new List<TransactionOutput>();
             IssuanceTime = DateTime.UtcNow;
             IsBlockReward = false;
         }
@@ -127,7 +127,7 @@ namespace TransactionManager
             _signture = new Signture(Signture);
             IssuanceTime = j.IssuanceTime;
             TransactionInputs = j.TransactionInputs;
-            TtransactionOutputs = j.TtransactionOutputs;
+            TransactionOutputs = j.TransactionOutputs;
             IsBlockReward = j.IsBlockReward;
         }
         /// <summary>
@@ -179,7 +179,20 @@ namespace TransactionManager
         }
         #endregion
         #region Process
-        public bool Process(Func<Transaction, bool> checkGenesis, Func<Transaction, bool> chechBlockReward)
+        /// <summary>
+        /// Processing Transaction In Miner
+        /// </summary>
+        /// <param name="checkGenesis">A function That returns whether a transaction is Genesis or not.</param>
+        /// <param name="chechBlockReward">A function that indicate if Transaction is a Block Reward.</param>
+        /// <param name="checkForAvailibilityInUTXOs">check if transaction inputs are valide in network.</param>
+        /// <param name="cleaningUTXOs">clearing old inputs and adding new ones in network UTXOs and update UTXOs.</param>
+        /// <returns></returns>
+        public bool Process(
+            Func<Transaction, bool> checkGenesis,
+            Func<Transaction, bool> chechBlockReward,
+            Func<List<TransactionInput>, bool> checkForAvailibilityInUTXOs,
+            Func<List<TransactionInput>, List<TransactionOutput>, bool> cleaningUTXOs
+            )
         {
             if (!IsSignatureVerified) return false;
             //check if Transaction Reward Or Genesis
@@ -188,6 +201,15 @@ namespace TransactionManager
                 if (!string.IsNullOrEmpty(TransactionHash)) return checkGenesis(this);
                 return chechBlockReward(this);
             }
+            if (!checkForAvailibilityInUTXOs(TransactionInputs))
+            {
+                return false;
+            }
+            var Change = InputsBalance - OutputsBalance;
+            TransactionHash = GetHashString();
+            TransactionOutputs.Add(new TransactionOutput(Reciepient, Amount, TransactionHash));
+            TransactionOutputs.Add(new TransactionOutput(Issuer, Change, TransactionHash));
+            return cleaningUTXOs(TransactionInputs, TransactionOutputs);
         }
         #endregion
     }
