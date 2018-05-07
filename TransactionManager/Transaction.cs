@@ -21,6 +21,7 @@ namespace TransactionManager
         public DateTime IssuanceTime { get; private set; }
         public DateTime ConfirmationTime { get; set; }
         public string FirstBlockHash { get; set; }
+        public uint FirstConfirmationBlockNumber { get; set; }
         public List<TransactionInput> TransactionInputs { get; private set; }
         public List<TransactionOutput> TtransactionOutputs { get; private set; }
         public double InputsBalance
@@ -48,6 +49,21 @@ namespace TransactionManager
             }
         }
         #region ctor
+        /// <summary>
+        /// json constructor
+        /// tip:never can be used!
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="TransactionName"></param>
+        /// <param name="TransactionVersion"></param>
+        /// <param name="Issuer"></param>
+        /// <param name="Reciepient"></param>
+        /// <param name="Amount"></param>
+        /// <param name="Sequence"></param>
+        /// <param name="Signture"></param>
+        /// <param name="IssuanceTime"></param>
+        /// <param name="TransactionInputs"></param>
+        /// <param name="TtransactionOutputs"></param>
         [JsonConstructor]
         public Transaction(Guid ID, string TransactionName, byte TransactionVersion, string Issuer, string Reciepient, double Amount, uint Sequence, string Signture,
     DateTime IssuanceTime, List<TransactionInput> TransactionInputs, List<TransactionOutput> TtransactionOutputs)
