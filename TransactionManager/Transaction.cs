@@ -19,9 +19,10 @@ namespace TransactionManager
         private Signture _signture { get; set; }
         public string Signture { get; private set; }
         public DateTime IssuanceTime { get; private set; }
-        public DateTime ConfirmationTime { get; set; }
-        public string FirstBlockHash { get; set; }
-        public uint FirstConfirmationBlockNumber { get; set; }
+        public DateTime MinedTime { get; set; }
+        public string IncludedInBlock { get; set; }
+        public uint BlockNumber { get; set; }
+        public bool IsBlockReward { get; set; }
         public List<TransactionInput> TransactionInputs { get; private set; }
         public List<TransactionOutput> TtransactionOutputs { get; private set; }
         public double InputsBalance
@@ -64,15 +65,17 @@ namespace TransactionManager
         /// <param name="IssuanceTime"></param>
         /// <param name="TransactionInputs"></param>
         /// <param name="TtransactionOutputs"></param>
+        /// <param name="IsBlockReward"></param>
         [JsonConstructor]
         public Transaction(Guid ID, string TransactionName, byte TransactionVersion, string Issuer, string Reciepient, double Amount, uint Sequence, string Signture,
-    DateTime IssuanceTime, List<TransactionInput> TransactionInputs, List<TransactionOutput> TtransactionOutputs)
+    DateTime IssuanceTime, List<TransactionInput> TransactionInputs, List<TransactionOutput> TtransactionOutputs, bool IsBlockReward)
     : this(TransactionName, TransactionVersion, Issuer, Reciepient, Amount, Sequence, TransactionInputs)
         {
             this.ID = ID;
             this.Signture = Signture;
             this.TtransactionOutputs = TtransactionOutputs;
             this.IssuanceTime = IssuanceTime;
+            this.IsBlockReward = IsBlockReward;
         }
         /// <summary>
         /// for issuing new transaction in wallet
@@ -96,12 +99,13 @@ namespace TransactionManager
             TransactionInputs = transactionInputs;
             TtransactionOutputs = new List<TransactionOutput>();
             IssuanceTime = DateTime.UtcNow;
+            IsBlockReward = false;
         }
         /// <summary>
         /// Genesis Creator
         /// </summary>
-        public Transaction(Guid ID, string name, byte version, string issuer, string reciepient, double amount, uint seq, List<TransactionInput> transactionInputs, string HashString) :
-            this(name, version, issuer, reciepient, amount, seq, transactionInputs)
+        public Transaction(byte version, string issuer, string reciepient, double amount, uint seq, string HashString) :
+            this("Genesis", version, issuer, reciepient, amount, seq, null)
         {
             TransactionHash = HashString;
         }
@@ -124,6 +128,18 @@ namespace TransactionManager
             IssuanceTime = j.IssuanceTime;
             TransactionInputs = j.TransactionInputs;
             TtransactionOutputs = j.TtransactionOutputs;
+            IsBlockReward = j.IsBlockReward;
+        }
+        /// <summary>
+        /// uses in miners for creatging block reward
+        /// </summary>
+        /// <param name="version">block version</param>
+        /// <param name="reciepient">sender and reciepient which both are the same</param>
+        /// <param name="seq">block number</param>
+        public Transaction(byte version, string reciepient, uint seq)
+            : this("Block Reward", version, reciepient, reciepient, Utilities.BlockRewardForThisVersion, seq, null)
+        {
+            IsBlockReward = true;
         }
         public string GetHashString()
         {
@@ -163,7 +179,16 @@ namespace TransactionManager
         }
         #endregion
         #region Process
-
+        public bool Process(Func<Transaction, bool> checkGenesis, Func<Transaction, bool> chechBlockReward)
+        {
+            if (!IsSignatureVerified) return false;
+            //check if Transaction Reward Or Genesis
+            if (TransactionInputs == null)
+            {
+                if (!string.IsNullOrEmpty(TransactionHash)) return checkGenesis(this);
+                return chechBlockReward(this);
+            }
+        }
         #endregion
     }
 }

@@ -17,5 +17,6 @@ namespace TransactionManager
             }
             return Convert.ToBase64String(hash);
         }
+        public static double BlockRewardForThisVersion { get; set; }
     }
 }
