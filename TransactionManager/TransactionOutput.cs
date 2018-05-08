@@ -11,6 +11,8 @@ namespace TransactionManager
         public string Reciepient { get; private set; }
         public double Amount { get; private set; }
         public bool IsProcessing { get; set; }
+        public string ContainerTransactionHash { get; set; }
+        public string ContainerBlockHash { get; set; }
         public string ParentTransactionHash { get; private set; }
         [JsonConstructor]
         public TransactionOutput(string Reciepient, double Amount, string ParentTransactionHash)

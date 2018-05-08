@@ -20,7 +20,7 @@ namespace TransactionManager
         public string Signture { get; private set; }
         public DateTime IssuanceTime { get; private set; }
         public DateTime MinedTime { get; set; }
-        public string IncludedInBlock { get; set; }
+        public string ContainerBlockHash { get; set; }
         public uint BlockNumber { get; set; }
         public bool IsBlockReward { get; set; }
         public List<TransactionInput> TransactionInputs { get; private set; }
@@ -210,6 +210,10 @@ namespace TransactionManager
             TransactionOutputs.Add(new TransactionOutput(Reciepient, Amount, TransactionHash));
             TransactionOutputs.Add(new TransactionOutput(Issuer, Change, TransactionHash));
             return cleaningUTXOs(TransactionInputs, TransactionOutputs);
+        }
+        public bool FinishingTransacion(Func<string, string, bool> finalize)
+        {
+            return finalize(TransactionHash, ContainerBlockHash);
         }
         #endregion
     }
