@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransactionManager", "TransactionManager\TransactionManager.csproj", "{7035B1D8-F3DF-4E3C-A873-B91BF4AEF49A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{18DF2808-BA36-4ABF-B7E9-7CFA1B7AEF3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{7035B1D8-F3DF-4E3C-A873-B91BF4AEF49A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7035B1D8-F3DF-4E3C-A873-B91BF4AEF49A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7035B1D8-F3DF-4E3C-A873-B91BF4AEF49A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18DF2808-BA36-4ABF-B7E9-7CFA1B7AEF3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18DF2808-BA36-4ABF-B7E9-7CFA1B7AEF3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18DF2808-BA36-4ABF-B7E9-7CFA1B7AEF3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18DF2808-BA36-4ABF-B7E9-7CFA1B7AEF3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
