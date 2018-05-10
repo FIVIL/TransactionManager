@@ -184,13 +184,13 @@ namespace TransactionManager
         /// </summary>
         /// <param name="checkGenesis">A function That returns whether a transaction is Genesis or not.</param>
         /// <param name="chechBlockReward">A function that indicate if Transaction is a Block Reward.</param>
-        /// <param name="checkForAvailibilityInUTXOs">check if transaction inputs are valide in network.</param>
+        /// <param name="checkForUTXOs">check if transaction inputs are valide in network.</param>
         /// <param name="cleaningUTXOs">clearing old inputs and adding new ones in network UTXOs and update UTXOs.</param>
         /// <returns></returns>
         public bool Process(
             Func<Transaction, bool> checkGenesis,
             Func<Transaction, bool> checkBlockReward,
-            Func<List<TransactionInput>, bool> checkForAvailibilityInUTXOs,
+            Func<List<TransactionInput>, bool> checkForUTXOs,
             Func<List<TransactionInput>, List<TransactionOutput>, bool> cleaningUTXOs
             )
         {
@@ -202,7 +202,7 @@ namespace TransactionManager
                 if (!string.IsNullOrEmpty(TransactionHash)) return checkGenesis(this);
                 return checkBlockReward(this);
             }
-            if (!checkForAvailibilityInUTXOs(TransactionInputs))
+            if (!checkForUTXOs(TransactionInputs))
             {
                 return false;
             }
