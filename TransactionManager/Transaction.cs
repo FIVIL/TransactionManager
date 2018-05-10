@@ -198,9 +198,15 @@ namespace TransactionManager
             //check if Transaction Reward Or Genesis
             if (TransactionInputs == null)
             {
-                cleaningUTXOs(null, TransactionOutputs);
-                if (!string.IsNullOrEmpty(TransactionHash)) return checkGenesis(this);
-                return checkBlockReward(this);
+                if (!string.IsNullOrEmpty(TransactionHash))
+                {
+                    var res = checkGenesis(this);
+                    if (res) return cleaningUTXOs(null, TransactionOutputs);
+                    else return res;
+                }
+                var resBR = checkBlockReward(this);
+                if (resBR) return cleaningUTXOs(null, TransactionOutputs);
+                else return resBR;
             }
             if (!checkForUTXOs(TransactionInputs))
             {
