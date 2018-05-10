@@ -189,7 +189,7 @@ namespace TransactionManager
         /// <returns></returns>
         public bool Process(
             Func<Transaction, bool> checkGenesis,
-            Func<Transaction, bool> chechBlockReward,
+            Func<Transaction, bool> checkBlockReward,
             Func<List<TransactionInput>, bool> checkForAvailibilityInUTXOs,
             Func<List<TransactionInput>, List<TransactionOutput>, bool> cleaningUTXOs
             )
@@ -198,8 +198,9 @@ namespace TransactionManager
             //check if Transaction Reward Or Genesis
             if (TransactionInputs == null)
             {
+                cleaningUTXOs(null, TransactionOutputs);
                 if (!string.IsNullOrEmpty(TransactionHash)) return checkGenesis(this);
-                return chechBlockReward(this);
+                return checkBlockReward(this);
             }
             if (!checkForAvailibilityInUTXOs(TransactionInputs))
             {
