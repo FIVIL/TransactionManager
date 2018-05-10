@@ -206,7 +206,7 @@ namespace TransactionManager
             {
                 return false;
             }
-            var Change = InputsBalance - OutputsBalance;
+            var Change = InputsBalance - Amount;
             TransactionHash = GetHashString();
             TransactionOutputs.Add(new TransactionOutput(Reciepient, Amount, TransactionHash));
             TransactionOutputs.Add(new TransactionOutput(Issuer, Change, TransactionHash));
