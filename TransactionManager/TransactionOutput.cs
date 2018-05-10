@@ -7,6 +7,7 @@ namespace TransactionManager
 {
     public class TransactionOutput
     {
+        public Guid ID { get; private set; }
         public string HashString { get; private set; }
         public string Reciepient { get; private set; }
         public double Amount { get; private set; }
@@ -14,15 +15,27 @@ namespace TransactionManager
         public string ContainerTransactionHash { get; set; }
         public string ContainerBlockHash { get; set; }
         public string ParentTransactionHash { get; private set; }
-        [JsonConstructor]
+        public DateTime IssuingTime { get; private set; }
         public TransactionOutput(string Reciepient, double Amount, string ParentTransactionHash)
         {
             this.Reciepient = Reciepient;
             this.Amount = Amount;
             this.ParentTransactionHash = ParentTransactionHash;
-            HashString = (Reciepient + Amount.ToString() + ParentTransactionHash).GetHashString();
+            HashString = (Reciepient + Amount.ToString() + ParentTransactionHash + ID.ToString()).GetHashString();
             IsProcessing = false;
+            ID = Guid.NewGuid();
+            IssuingTime = DateTime.Now;
         }
+        //[JsonConstructor]
+        //public TransactionOutput(Guid ID, string Reciepient, double Amount, string ParentTransactionHash,bool IsProcessing,
+        //    string ContainerTransactionHash,string ContainerBlockHash,DateTime IssuingTime)
+        //{
+        //    this.ID = ID;
+        //    this.Reciepient = Reciepient;
+        //    this.Amount = Amount;
+        //    this.IsProcessing = IsProcessing;
+        //    this.ContainerTransactionHash=cont
+        //}
         public bool IsMine(string Key)
         {
             return (Key == Reciepient) && !IsProcessing;
