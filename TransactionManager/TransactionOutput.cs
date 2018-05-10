@@ -21,9 +21,9 @@ namespace TransactionManager
             this.Reciepient = Reciepient;
             this.Amount = Amount;
             this.ParentTransactionHash = ParentTransactionHash;
+            ID = Guid.NewGuid();
             HashString = (Reciepient + Amount.ToString() + ParentTransactionHash + ID.ToString()).GetHashString();
             IsProcessing = false;
-            ID = Guid.NewGuid();
             IssuingTime = DateTime.Now;
         }
         //[JsonConstructor]
